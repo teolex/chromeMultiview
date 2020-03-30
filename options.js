@@ -4,6 +4,8 @@
 
 'use strict';
 
+const URLS = "urls";
+
 var d		= document;
 	d.id	= d.getElementById,
 	d.new	= d.createElement;
@@ -17,7 +19,8 @@ var g_id,						// global id variable to store selected frame's id number
 		close	: "close"
 	},
 	leftTime = 300,
-	timeInterval;
+	timeInterval,
+	urlBackup = [];
 
 var frames = d.id("frames");	// wrapper to contain all sub frame
 var $left = $("#leftTime");
@@ -33,7 +36,9 @@ function _newClose(frame) {
 	close.className	= prefix.close;					// set class name for this delete button
 	close.addEventListener("click", function(e) {	// when user clicks this,
 		e.stopPropagation();
-		$(frame).remove();							// target frame will be removed.
+		//$(frame).remove();							// target frame will be removed.
+		g_id = frame.id.replace(/[^\d]/gi, "");		// check the id,
+		delFrame();
 	});
 	return close;
 }
@@ -65,16 +70,19 @@ function _newUrl(id, url) {
 	var _url = d.new("input");
 	_url.className = prefix.url;
 	_url.type = "text";
-	_url.readonly = true;
+	_url.readonly = "readOnly";
 	_url.value = url;
 	return _url;
 }
-function addFrame() {								// Add new sub wrapper containing iframe and veil
-	var url		= d.id("url").value,				// get value for the src of new iframe
-		id		= parseInt(Math.random() * 10000);	// random id number
+function addFrame(url) {							// Add new sub wrapper containing iframe and veil
+	if( !url ) {
+		url	= d.id("url").value;					// get value for the src of new iframe
+		url = url.startsWith("http") ? url : ("http://" + url);
+		urlBackup.push(url);
+		localStorage.setItem(URLS, urlBackup.join("@@"));
+	}
 
-	url = url.startsWith("http") ? url : ("http://" + url);
-
+	var id		= parseInt(Math.random() * 10000);	// random id number
 	var frame	= _newFrame(id);
 	var close	= _newClose(frame);
 	var _url	= _newUrl(id, url);
@@ -116,6 +124,21 @@ function refresh() {
 }
 function delFrame() {
 	$("#"+prefix.frame+g_id).remove();
+	var $url = $(".urltext");
+	var urls =  [];
+	for(var i = 0 ; i < $url.length ; i++) {
+		urls.push($url.eq(i).val());
+	}
+	urlBackup = urls;
+	localStorage.setItem(URLS, urlBackup.join("@@"));
+}
+function loadFromLS() {
+	var tmp = localStorage.getItem(URLS);
+	tmp = tmp && tmp.length > 0 ? tmp.split("@@") : [];
+	urlBackup = tmp;
+	for( var i in urlBackup ) {
+		addFrame(urlBackup[i]);
+	}
 }
 {
 	var btns = ["addBtn",	"seeBtn",	"refreshBtn",	"delBtn"];
@@ -129,7 +152,6 @@ function delFrame() {
 		e.keyCode == 13 ? addFrame() : "";
 	});
 
-	
 	var interval = setInterval(refresh, 1000 * 5 * 60);
 	setInterval(function() {
 		if( $("iframe").length > 0 ) {
@@ -139,4 +161,6 @@ function delFrame() {
 		}
 		printTime();
 	}, 1000);
+
+	loadFromLS();
 }
