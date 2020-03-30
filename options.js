@@ -144,12 +144,16 @@ function loadFromLS() {
 const $cols = $("#columns select");
 function setFrameWidth() {
 	var cols = $cols.val();
-	$(".frames .frame").width(100/cols + "%");
+	var count = $(".frames .frame").length;
+	$(".frames .frame").width(100/cols + "%")
+						.height(100/(Math.ceil(count/cols)) + "%");
 
 	var width = $(".frames .frame").eq(0).width();
 	$(".frames iframe").width(100*cols + "%")
 						.height(100*cols + "%")
 						.css({"-webkit-transform":"scale("+(1/cols)+")", "-webkit-transform-origin":"0 0"});
+
+
 }
 {
 	var btns = ["addBtn",	"seeBtn",	"refreshBtn",	"delBtn"];
