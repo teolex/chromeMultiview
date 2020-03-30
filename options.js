@@ -70,8 +70,8 @@ function _newUrl(id, url) {
 	var _url = d.new("input");
 	_url.className = prefix.url;
 	_url.type = "text";
-	_url.readonly = "readOnly";
 	_url.value = url;
+	_url.readOnly = true;
 	return _url;
 }
 function addFrame(url) {							// Add new sub wrapper containing iframe and veil
