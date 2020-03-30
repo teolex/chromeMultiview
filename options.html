@@ -14,14 +14,17 @@
 			.btnArea {border-bottom:1px solid gray; padding:3px 5px;}
 			.btnArea input#url {height:24px; width:250px;}
 			.btnArea button#delBtn {float:right;}
+			.btnArea #columns {margin-left:50px; }
+			.btnArea #columns select {height:30px;}
 			.frames {width:100%; height:95%;}
-			.frames .frame {border:1px solid lightgray; margin:1px 0; width:calc(33.3% - 2px); height:350px; position:relative; display:inline-block;}
-			.frames iframe {border:0; outline:none; width:calc(100% * 2); height:calc(100% * 2 - 31px);-ms-zoom: 0.5;-moz-transform: scale(0.5);-moz-transform-origin:0 0;-o-transform: scale(0.5);-o-transform-origin: 0 0;-webkit-transform: scale(0.5);-webkit-transform-origin: 0 0; zoom: 0.5;}
-			.frames .veil {border:0; outline:none; width:100%; height:calc(100% + 23px); position:absolute; left:0; top:0; cursor:pointer; }
-			.frames .veil .close {width:30px; height:30px; position:absolute; top:0; right:0; background:transparent url(images/close.png) center center no-repeat; background-size: 30px 30px; display:none; z-index:10;}
+			.frames .frame {border-bottom:1px solid lightgray; border-top:1px solid lightgray; margin:1px 0; height:33.3%; position:relative; display:inline-block; overflow: hidden;}
+			.frames iframe {border:0; outline:none;}
+			.frames .veil {border:0; outline:none; width:100%; height:100%; position:absolute; left:0; top:30px; cursor:pointer; }
 			.frames .veil:hover {background-color:red; opacity:0.5;}
 			.frames .veil:hover .close {display:block;}
+			.frames .veil .close {width:30px; height:30px; position:absolute; top:0; right:0; background:transparent url(images/close.png) center center no-repeat; background-size: 30px 30px; display:none; z-index:10;}
 			.frames .urltext {width:calc(100% - 3px); height:25px;}
+
 		</style>
 	</head>
 	<body>
@@ -33,6 +36,15 @@
 			<button id="seeBtn">See All</button>
 			<button id="refreshBtn">Refresh All</button>
 			<span id="leftTime"></span>
+			<span id="columns">
+				Columns :
+				<select>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</span>
 			<button id="delBtn">Delete current frame</button>
 		</div>
 		<div class="frames" id="frames"></div>
