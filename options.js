@@ -5,6 +5,7 @@
 'use strict';
 
 const URLS = "urls";
+const COLS = "column";
 
 var d		= document;
 	d.id	= d.getElementById,
@@ -95,6 +96,7 @@ function addFrame(url) {							// Add new sub wrapper containing iframe and veil
 	frames.appendChild(frame);
 
 	d.id("url").value = "";
+	setFrameWidth();
 }
 function seeFrame() {
 	$("."+prefix.veil).show();				// make all veil be seen
@@ -132,19 +134,26 @@ function delFrame() {
 	urlBackup = urls;
 	localStorage.setItem(URLS, urlBackup.join("@@"));
 }
+
+const $cols = $("#columns select");
 function loadFromLS() {
+	var cols = localStorage.getItem(COLS);
+	$cols.find("option[value="+cols+"]").attr("selected", "selected");
+
 	var tmp = localStorage.getItem(URLS);
 	tmp = tmp && tmp.length > 0 ? tmp.split("@@") : [];
 	urlBackup = tmp;
 	for( var i in urlBackup ) {
 		addFrame(urlBackup[i]);
 	}
-}
 
-const $cols = $("#columns select");
-function setFrameWidth() {
-	var cols = $cols.val();
+	setFrameWidth(cols);
+}
+function setFrameWidth(cols) {
 	var count = $(".frames .frame").length;
+	cols = cols && isFinite(cols) ? cols : $cols.val();
+	console.log(cols);
+
 	$(".frames .frame").width(100/cols + "%")
 						.height(100/(Math.ceil(count/cols)) + "%");
 
@@ -153,7 +162,7 @@ function setFrameWidth() {
 						.height(100*cols + "%")
 						.css({"-webkit-transform":"scale("+(1/cols)+")", "-webkit-transform-origin":"0 0"});
 
-
+	localStorage.setItem(COLS, cols);
 }
 {
 	var btns = ["addBtn",	"seeBtn",	"refreshBtn",	"delBtn"];
@@ -178,6 +187,5 @@ function setFrameWidth() {
 	}, 1000);
 
 	loadFromLS();
-	setFrameWidth();
 	$cols.change(setFrameWidth);
 }
